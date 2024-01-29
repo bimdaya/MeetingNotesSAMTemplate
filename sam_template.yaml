@@ -51,6 +51,9 @@ Resources:
         Variables:
           DynamoDBTableName: !Ref MeetingNotesTable
           TeamEmailsTableName: !Ref TeamEmailsTable
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName: !Ref MeetingNotesTable
       Events:
         ApiEvent:
           Type: Api
