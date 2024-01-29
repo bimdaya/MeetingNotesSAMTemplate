@@ -64,6 +64,9 @@ Resources:
       FunctionName: UploadPictureFunction
       Handler: upload_picture.lambda_handler
       Runtime: python3.8
+      Environment:
+        Variables:
+          S3BucketName: !Ref MeetingNotesBucket
       Events:
         ApiEvent:
           Type: Api
