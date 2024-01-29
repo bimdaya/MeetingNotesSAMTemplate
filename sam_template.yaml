@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+Description: Meeting Notes App
+
+Resources:
+  TeamEmailsTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: TeamEmailsTable
+      AttributeDefinitions:
+        - AttributeName: Email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Email
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+
+  MeetingNotesTable:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: MeetingNotesTable
+      AttributeDefinitions:
+        - AttributeName: NoteID
+          AttributeType: S
+      KeySchema:
+        - AttributeName: NoteID
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  MeetingNotesBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: meeting-notes-bucket
+
+  UploadNoteFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: UploadNoteFunction
+      Handler: upload_note.lambda_handler
+      Runtime: python3.8
+      Environment:
+        Variables:
+          DynamoDBTableName: !Ref MeetingNotesTable
+          TeamEmailsTableName: !Ref TeamEmailsTable
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /upload
+            Method: POST
+
+  UploadPictureFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: UploadPictureFunction
+      Handler: upload_picture.lambda_handler
+      Runtime: python3.8
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /upload-picture
+            Method: POST
+
+  NotifyTeamFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: NotifyTeamFunction
+      Handler: notify_team.lambda_handler
+      Runtime: python3.8
+      Environment:
+        Variables:
+          TeamEmailsTableName: !Ref TeamEmailsTable
+          SESRegion: 'us-east-1'  # Replace with your AWS region
+      Events:
+        PublishEvent:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                - "aws.dynamodb"
+              detail-type:
+                - "AWS API Call via CloudTrail"
+              detail:
+                eventSource:
+                  - "dynamodb.amazonaws.com"
+                eventName:
+                  - "PutItem"
+            EventBusName: default
