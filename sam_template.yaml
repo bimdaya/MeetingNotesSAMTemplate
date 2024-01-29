@@ -23,14 +23,14 @@ Resources:
     Properties:
       TableName: MeetingNotesTable
       AttributeDefinitions:
-        - AttributeName: MeetingID
-          AttributeType: N
-        - AttributeName: NoteID
-          AttributeType: N
+        - AttributeName: MeetingName
+          AttributeType: S
+        - AttributeName: NoteName
+          AttributeType: S
       KeySchema:
-        - AttributeName: MeetingID
+        - AttributeName: MeetingName
           KeyType: HASH
-        - AttributeName: NoteID
+        - AttributeName: NoteName
           KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
