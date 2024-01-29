@@ -9,8 +9,9 @@ table_name = os.environ['DynamoDBTableName']
 table = dynamodb.Table(table_name)
 
 def lambda_handler(event, context):
-    body = event['body'][0]
+    body = event['body']
     title = body['title']
+    content = body['content']
     meeting_name = body['meeting']
     uploader_email = body['uploader_email']
 
