@@ -8,6 +8,7 @@ def lambda_handler(event, context):
     body = json.loads(event['body'])
     note_id = body['note_id']
     picture_data = body['picture_data']
+    s3_bucket = os.environ['S3BucketName']
 
     # Save picture to a temporary file
     temp_path = '/tmp/temp_picture.jpg'
