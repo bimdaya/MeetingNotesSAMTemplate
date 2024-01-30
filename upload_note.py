@@ -9,15 +9,16 @@ table_name = os.environ['DynamoDBTableName']
 table = dynamodb.Table(table_name)
 
 def lambda_handler(event, context):
-    body = event['body']
-    meeting_name = body['meeting']
-    notes = body['notes']
+    
+    body = json.loads(event['body'])
+    meeting_name = body['body']['meeting']
+    notes = body['body']['notes']
 
     table.put_item(
         Item={
             'MeetingName': meeting_name,
             'Notes': notes,
-            'Timestamp': str(datetime.now())
+            'Tmestamp': str(datetime.now())
         }
     )
 
