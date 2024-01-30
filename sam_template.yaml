@@ -25,12 +25,12 @@ Resources:
       AttributeDefinitions:
         - AttributeName: MeetingName
           AttributeType: S
-        - AttributeName: Title
+        - AttributeName: Tmestamp
           AttributeType: S
       KeySchema:
         - AttributeName: MeetingName
           KeyType: HASH
-        - AttributeName: Title
+        - AttributeName: Tmestamp
           KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
