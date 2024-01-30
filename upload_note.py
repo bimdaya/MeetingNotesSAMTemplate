@@ -10,18 +10,13 @@ table = dynamodb.Table(table_name)
 
 def lambda_handler(event, context):
     body = event['body']
-    title = body['title']
-    content = body['content']
     meeting_name = body['meeting']
-    uploader_email = body['uploader_email']
+    notes = body['notes']
 
     table.put_item(
         Item={
             'MeetingName': meeting_name,
-            'Title': title,
-            'Content': content,
-            'UploaderEmail': uploader_email,
-            'Timestamp': str(datetime.now())
+            'Notes': notes
         }
     )
 
