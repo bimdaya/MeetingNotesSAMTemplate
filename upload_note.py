@@ -16,7 +16,8 @@ def lambda_handler(event, context):
     table.put_item(
         Item={
             'MeetingName': meeting_name,
-            'Notes': notes
+            'Notes': notes,
+            'Timestamp': str(datetime.now())
         }
     )
 
