@@ -11,8 +11,8 @@ table = dynamodb.Table(table_name)
 def lambda_handler(event, context):
     
     body = json.loads(event['body'])
-    meeting_name = body['body']['meeting']
-    notes = body['body']['notes']
+    meeting_name = body['meetingTitle']
+    notes = body['notes']
 
     table.put_item(
         Item={
@@ -24,5 +24,11 @@ def lambda_handler(event, context):
 
     return {
         'statusCode': 200,
+        'headers': {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'OPTIONS, POST, GET, PUT, DELETE',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Max-Age': '3600',
+        },
         'body': json.dumps('Meeting note uploaded successfully!')
     }
